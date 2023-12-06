@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css"
+</head>
+<body>
+    
+    <section></section>
+
+    <section class="container">
+        <h1>It's<br>so<br>curvy</h1>
+        <svg viewBox="0 0 1267 143" xmlns="http://www.w3.org/2000/svg">
+            <path id="curve" d="M1 73C109.333 19 384.4 -56.6 618 73C851.6 202.6 1148 121 1267 64" fill="transparent" />
+            <text>
+                <textPath id="text-path" href="#curve" startOffset="0">
+                    Animate this text along the curve
+                </textPath>
+            </text>
+        </svg>
+    </section>
+
+    <section></section>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const textPath = document.getElementById("text-path");
+            const scrollSpeed = 2.5; // You can change this value to control the speed
+            const animationDirection = "right"; // You can change this value to "left" or "right"
+            const startPosition = -100; // You can change this value to set the starting position (in percentage)
+
+            const updateTextPosition = () => {
+                const container = document.querySelector(".container");
+                const containerRect = container.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+
+                if (containerRect.top <= windowHeight && containerRect.bottom >= 0) {
+                    const directionMultiplier = animationDirection === "left" ? 1 : -1;
+                    const startOffset = startPosition + ((containerRect.top - windowHeight) / (containerRect.height + windowHeight)) * 100 * scrollSpeed * directionMultiplier;
+                    textPath.setAttribute("startOffset", startOffset + "%");
+                }
+
+            }
+
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            updateTextPosition();
+                        }
+                    });
+                },
+                { threshold: 0.1 }
+            );
+
+            observer.observe(textPath);
+
+            window.addEventListener("scroll", updateTextPosition);
+        })
+
+    </script>
+</body>
+</html>
